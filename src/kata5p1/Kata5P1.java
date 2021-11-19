@@ -13,6 +13,7 @@ public class Kata5P1 {
     private String name = "Kata5.db";
     
     public static void main(String[] args) {
+        //QUITAR LOS METODOS Y METER TODO EN EL MAIN
         Kata5P1 kata5P1 = new Kata5P1();
         kata5P1.dbQuery();
         kata5P1.createNewTable();
