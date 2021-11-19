@@ -1,7 +1,9 @@
 package kata5p1;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,6 +15,7 @@ public class Kata5P1 {
     public static void main(String[] args) {
         Kata5P1 kata5P1 = new Kata5P1();
         kata5P1.dbQuery();
+        kata5P1.createNewTable();
     }
     
     private Connection connect(){
@@ -54,6 +57,63 @@ public class Kata5P1 {
         } finally {
             close(conn);
         }   
+    }
+    
+    public void createNewDatabase(){
+        
+        Connection conn = null;
+        String url = "jdbc:sqlite:" + name;
+        
+        try {
+            conn = DriverManager.getConnection(url);
+            if(conn != null){
+                DatabaseMetaData meta = conn.getMetaData();
+                System.out.println("El driver es " + meta.getDriverName());
+                System.out.println("Se ha creado una nueva BD.");
+            }
+        } catch (SQLException ex) {
+            System.out.println("" + ex.getMessage());
+        } finally {
+            close(conn);
+        }
+        
+    }
+    
+    public void createNewTable(){
+        
+        Connection conn = null;
+        String sql = "CREATE TABLE IF NOT EXISTS EMAIL (\n"
+                + " Id integer PRIMARY KEY AUTOINCREMENT, \n"
+                + " Mail text NOT NULL);";
+        
+        try {
+            conn = this.connect();
+            Statement st = conn.createStatement();
+            st.execute(sql);
+        } catch (SQLException ex) {
+            System.out.println("" + ex.getMessage());
+        } finally {
+            close(conn);
+        }
+        
+    }
+    
+    public void insertData(String email){
+        
+        Connection conn = null;
+        String sql = "INSERT INTO CORREOS(Direccion) VALUES (?)";
+        
+        try {
+            conn = this.connect();
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, email);
+            pst.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println("" + ex.getMessage());
+        } finally {
+            close(conn);
+        }
+        
     }
     
 }
